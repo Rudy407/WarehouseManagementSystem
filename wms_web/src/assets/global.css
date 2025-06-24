@@ -1,4 +1,17 @@
 *{
     margin: 0;
     padding: 0;
+    #border-radius: 8px !important; /* 8px 你可以改成你想要的圆角大小 */
+    #overflow: hidden; /* 防止圆角被内容撑破 */
 }
+
+/*.el-menu-item:hover,*/
+/*.el-menu-item:hover i{*/
+/*    color: #409EFF !important;                !* 文字颜色 *!*/
+/*}*/
+
+/*!*点击*!*/
+/*.el-menu-item.is-active{*/
+/*    background-color: #409EFF !important; !* 背景色 *!*/
+/*    color: #fff !important;                !* 文字颜色 *!*/
+/*}*/
