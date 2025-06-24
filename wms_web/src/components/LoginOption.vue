@@ -54,12 +54,13 @@ export default {
             console.log(res)
             if(res.code==200){
               //存储
-              sessionStorage.setItem("CurUser",JSON.stringify(res.data))
-
+              sessionStorage.setItem("CurUser",JSON.stringify(res.data.user))
+              this.$store.commit("setMenu",res.data.menu);
               // console.log(res.data.menu)
               // this.$store.commit("setMenu",res.data.menu)
               //跳转到主页
-              this.$router.replace('/index');
+              //this.$router.replace('/index');
+              this.$router.push("/index/home");
             }else{
               this.confirm_disabled=false;
               alert('校验失败，用户名或密码错误！');
@@ -83,7 +84,7 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: #B3C0D1;
+  background-image: url("../../public/background.jpg");
 }
 .loginDiv {
   position: absolute;

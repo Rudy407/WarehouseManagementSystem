@@ -1,11 +1,10 @@
 <script>
 import AsideOption from "@/components/AsideOption.vue";
 import HeaderOption from "@/components/HeaderOption.vue";
-import MainOption from "@/components/MainOption.vue";
 
 export default {
   name: "IndexPage",
-  components: {MainOption, HeaderOption, AsideOption},
+  components: {HeaderOption, AsideOption},
   data(){
     return{
       isCollapse:false,
@@ -41,7 +40,7 @@ export default {
       </el-header>
 
       <el-main>
-        <MainOption></MainOption>
+        <router-view/>
       </el-main>
     </el-container>
   </el-container>

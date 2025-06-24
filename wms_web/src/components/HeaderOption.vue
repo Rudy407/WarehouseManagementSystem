@@ -14,6 +14,7 @@ export default {
   methods:{
     toUser(){
       console.log("to user");
+      this.$router.push("/index/home")
     },
     logout(){
       console.log("log out");
@@ -48,7 +49,7 @@ export default {
     <div style="line-height: 60px;font-size: 30px">
       <i :class="icon" @click="collapse" style="cursor: pointer"></i>
     </div>
-    <div style="flex: 1;text-align: center;font-size: 30px">Warehouse</div>
+    <div style="flex: 1;text-align: center;font-size: 30px"></div>
     <span>{{user.name}}</span>
     <el-dropdown trigger="click" style="cursor: pointer">
       <i class="el-icon-arrow-down" style="margin-left: 5px"></i>
