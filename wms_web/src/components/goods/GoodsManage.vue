@@ -1,24 +1,24 @@
 <script>
 export default {
-  name: "UserManage",
+  name: "GoodsManage",
   data() {
-    let checkAge = (rule, value, callback) => {
-      if(value>150){
-        callback(new Error('年龄输⼊过⼤'));
+    let checkCount = (rule, value, callback) => {
+      if(value>9999){
+        callback(new Error('数量输⼊过⼤'));
       }else{
         callback();
       }
     };
     let checkDuplicate =(rule,value,callback)=>{
-      if(this.form.id){
+      if(this.form.name){
         return callback();
       }
       if(this.isEdit){
         return callback();
       }
-      this.$axios.get(this.$httpUrl+"/user/findByNo?no="+this.form.no).then(res=>res.data).then(res=>{
+      this.$axios.get(this.$httpUrl+"/goods/findByName?name="+this.form.name).then(res=>res.data).then(res=>{
         if(res.code==200){
-          callback(new Error('账号已经存在'))
+          callback(new Error('物品已经存在'))
         }else{
           callback();
         }
@@ -30,66 +30,55 @@ export default {
       pageNum: 1,
       total: 0,
       name: "",
-      sex: null,
-      sexs:[{
-        value: 1,
-        label: '男'
-      }, {
-        value: 0,
-        label: '女'
-      }],
+      goodstype:null,
+      count:null,
+      storage:null,
+      remark:"",
       centerDialogVisible: false,
       form:{
-        no:"",
-        name:"",
-        sex:1,
-        age:null,
-        roleId:2,
-        phone:"",
-        password:""
+        name: "",
+        goodstype:null,
+        count:null,
+        storage:null,
+        remark:""
       },
       isEdit:false,
       rules: {
-        no: [
-          {required: true, message: '请输入账号', trigger: 'blur'},
-          {min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'},
+        name: [
+          {required: true, message: '请输入物品名', trigger: 'blur'},
           {validator:checkDuplicate,trigger: 'blur'}
         ],
-        name: [
-          {required: true, message: '请输入姓名', trigger: 'blur'}
+        goodstype: [
+          {required: true, message: '请输入物品类型', trigger: 'blur'},
+          {validator:checkDuplicate,trigger: 'blur'}
         ],
-        age: [
-          {required: true, message: '年龄', trigger: 'blur'},
-          {pattern: /^([1-9][0-9]*){1,3}$/,message: '年龄必须为正整数字',trigger: "blur"},
-          {validator:checkAge,trigger: 'blur'}
+        count: [
+          {required: true, message: '请输⼊数量', trigger: 'blur'},
+          {pattern: /^([1-9][0-9]*){1,4}$/,message: '数量必须为正整数字',trigger: "blur"},
+          {validator:checkCount,trigger: 'blur'}
         ],
-        phone: [
-          {required: true,message: "⼿机号不能为空",trigger: "blur"},
-          {pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/, message: "请输⼊正确的⼿机号码", trigger:
-                "blur"}
+        storage: [
+          {required: true, message: '请输入仓库名', trigger: 'blur'},
+          {validator:checkDuplicate,trigger: 'blur'}
         ],
-        password: [
-          {required: true, message: '请输入密码', trigger: 'blur'},
-          {min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur'}
-        ]
       }
     }
   },
   methods:{
     loadGet(){
-      this.$axios.get(this.$httpUrl+'/user/list').then(res=>res.data).then(res=>{
+      this.$axios.get(this.$httpUrl+'/goods/list').then(res=>res.data).then(res=>{
         console.log(res);
         this.tableData=res;
       })
     },
     loadPost(){
-      this.$axios.post(this.$httpUrl+'/user/listPageC',{
+      this.$axios.post(this.$httpUrl+'/goods/listPageC',{
         pageNum:this.pageNum,
         pageSize:this.pageSize,
         param:{
           name:this.name,
-          sex:this.sex,
-          roleId:2
+          goodstype:this.goodstype,
+          storage:this.storage
         }
       },).then(res=>res.data).then(res=>{
         console.log(res);
@@ -104,8 +93,10 @@ export default {
     },
     resetQuery(){
       this.name='';
-      this.roleId=2;
-      this.sex=null;
+      this.goodstype=null;
+      this.storage=null;
+      this.count=null;
+      this.remark='';
       this.loadPost();
     },
     add(){
@@ -115,63 +106,61 @@ export default {
     mod(scope){
       this.form = {
         id: scope.id,
-        no: scope.no,
         name: scope.name,
-        sex: scope.sex,
-        age: scope.age,
-        roleId: scope.roleId,
-        phone: scope.phone,
-        password: scope.password
+        goodstype: scope.goodstype,
+        storage: scope.storage,
+        count: scope.count,
+        remark: scope.remark
       };
       this.centerDialogVisible=true;
       this.isEdit=true;
     },
     del(scope){
       this.form={id: scope.id};
-      this.$axios.post(this.$httpUrl+'/user/delete',this.form).then(res=>res.data).then(res=> {
+      this.$axios.post(this.$httpUrl+'/goods/delete',this.form).then(res=>res.data).then(res=> {
         if (res.code == 200) {
           this.$message({
-            message:"删除用户成功",
+            message:"删除物品成功",
             type:"success"
           })
           this.loadPost();
         } else {
           this.$message({
-            message:"删除用户失败",
+            message:"删除物品失败",
             type:"error"
           })
         }
       })
     },
     doMod(){
-      this.$axios.post(this.$httpUrl+'/user/update',this.form).then(res=>res.data).then(res=> {
+      this.$axios.post(this.$httpUrl+'/goods/update',this.form).then(res=>res.data).then(res=> {
         if (res.code == 200) {
           this.centerDialogVisible=false;
           this.$message({
-            message:"编辑用户成功",
+            message:"编辑物品成功",
             type:"success"
           })
           this.loadPost();
         } else {
           this.$message({
-            message:"编辑用户失败",
+            message:"编辑物品失败",
             type:"error"
           })
         }
       })
     },
     doSave(){
-      this.$axios.post(this.$httpUrl+'/user/save',this.form).then(res=>res.data).then(res=> {
+      this.$axios.post(this.$httpUrl+'/goods/save',this.form).then(res=>res.data).then(res=> {
         if (res.code == 200) {
           this.centerDialogVisible=false;
           this.$message({
-            message:"新建用户成功",
+            message:"新建物品成功",
             type:"success"
           })
           this.loadPost();
         } else {
           this.$message({
-            message:"新建用户失败",
+            message:"新建物品失败",
             type:"error"
           })
         }
@@ -194,13 +183,11 @@ export default {
     },
     dialogClose(){
       this.form = {
-        no: "",
         name: "",
-        sex: 1,
-        age: null,
-        roleId: 2,
-        phone: "",
-        password: ""
+        goodstype: null,
+        storage: null,
+        count: null,
+        remark: ""
       };
       if (this.$refs.form) {
         this.$refs.form.resetFields();
@@ -227,47 +214,25 @@ export default {
 <template>
   <div>
     <div>
-      <el-input v-model="name" placeholder="请输入名字" style="width: 200px;margin-bottom: 5px" @keyup.enter.native="loadPost"></el-input>
-      <el-select v-model="sex" filterable placeholder="请选择性别" style="margin-left: 5px">
-        <el-option
-            v-for="item in sexs"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-        </el-option>
-      </el-select>
+      <el-input v-model="name" placeholder="请输入物品名" style="width: 200px;margin-bottom: 5px" @keyup.enter.native="loadPost"></el-input>
       <el-button type="primary" style="margin-left: 10px" @click="loadPost">查询</el-button>
       <el-button type="danger" @click="resetQuery">重置</el-button>
       <el-button type="success" @click="add">新增</el-button>
     </div>
     <el-table :data="tableData" :header-cell-style="{background:'#EDF5FF',color:'black'}" size="small" border>
-      <el-table-column prop="id" label="Id" width="100" align="center">
+      <el-table-column prop="id" label="Id" align="center">
       </el-table-column>
-      <el-table-column prop="no" label="账号" width="150" align="center">
+      <el-table-column prop="name" label="物品名" align="center">
       </el-table-column>
-      <el-table-column prop="name" label="姓名" width="150" align="center">
+      <el-table-column prop="goodstype" label="物品类型" align="center">
       </el-table-column>
-      <el-table-column prop="sex" label="性别" width="120" align="center">
-        <template slot-scope="scope">
-          <el-tag
-              :type="scope.row.sex === 1 ? 'primary' : 'success'"
-              disable-transitions>{{scope.row.sex === 1 ? '男' : '女'}}</el-tag>
-        </template>
+      <el-table-column prop="count" label="数量" align="center">
       </el-table-column>
-      <el-table-column prop="age" label="年龄" width="120" align="center">
+      <el-table-column prop="storage" label="仓库" align="center">
       </el-table-column>
-      <el-table-column prop="roleId" label="权限" width="150" align="center">
-        <template slot-scope="scope">
-          <el-tag
-              :type="scope.row.roleId === 0 ? 'danger' : (scope.row.roleId === 1 ? 'primary' : 'success')"
-              disable-transitions>{{scope.row.roleId === 0 ? '超级管理员' : (scope.row.roleId === 1 ? '管理员' : '用户')}}</el-tag>
-        </template>
+      <el-table-column prop="remark" label="备注" align="center">
       </el-table-column>
-      <el-table-column prop="phone" label="电话号码" width="180" align="center">
-      </el-table-column>
-      <el-table-column prop="password" label="密码" align="center">
-      </el-table-column>
-      <el-table-column prop="operate" label="操作" width="180" align="center">
+      <el-table-column prop="operate" label="操作" align="center">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="mod(scope.row)">编辑</el-button>
           <el-popconfirm title="确定删除吗？" @confirm="del(scope.row)" style="margin-left: 5px">
@@ -287,41 +252,35 @@ export default {
     >
     </el-pagination>
     <el-dialog
-        title="用户"
+        title="物品"
         :visible.sync="centerDialogVisible"
         width="30%"
         center
         @close="dialogClose">
       <el-form ref="form" :model="form" label-width="80px" :rules="rules">
-        <el-form-item label="账号" prop="no">
+        <el-form-item label="物品名" prop="name">
           <el-col :span="20">
-            <el-input v-model="form.no" :disabled="isEdit"></el-input>
+            <el-input v-model="form.name" :disabled="isEdit"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="姓名" prop="name">
+        <el-form-item label="物品类型" prop="goodstype">
           <el-col :span="20">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.goodstype"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="性别">
-          <el-radio-group v-model="form.sex">
-            <el-radio :label="1">男</el-radio>
-            <el-radio :label="0">女</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="年龄" prop="age">
+        <el-form-item label="物品数量" prop="count">
           <el-col :span="20">
-            <el-input v-model="form.age"></el-input>
+            <el-input v-model="form.count"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="电话号码" prop="phone">
+        <el-form-item label="仓库" prop="storage">
           <el-col :span="20">
-            <el-input v-model="form.phone"></el-input>
+            <el-input v-model="form.storage"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="密码" prop="password">
+        <el-form-item label="备注" prop="remark">
           <el-col :span="20">
-            <el-input v-model="form.password"></el-input>
+            <el-input v-model="form.remark"></el-input>
           </el-col>
         </el-form-item>
       </el-form>

@@ -9,12 +9,12 @@ export default {
       get() {
         return this.$store.state.menu;
       }
-    },
-    props: {
-      isCollapse: Boolean
-    },
-    methods: {}
-  }
+    }
+  },
+  props: {
+    isCollapse: Boolean
+  },
+  methods: {}
 }
 </script>
 

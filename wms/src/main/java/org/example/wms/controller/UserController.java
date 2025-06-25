@@ -48,19 +48,6 @@ public class UserController {
         return list.size()>0?Result.success(list.get(0)):Result.fail();
     }
 
-    //新增
-    @PostMapping("/save")
-    public Result save(@RequestBody User user){
-//        User existing = userService.getBaseMapper().selectOne(new LambdaQueryWrapper<User>().eq(User::getNo, user.getNo()));
-//        if(existing == null&&!user.getNo().equals("")){
-//            return userService.save(user)?Result.success():Result.fail();
-//        }
-//        else{
-//            return Result.fail();
-//        }
-        return userService.save(user)?Result.success():Result.fail();
-    }
-
     //登录
     @PostMapping("/login")
     public Result login(@RequestBody User user){
@@ -74,6 +61,12 @@ public class UserController {
             return Result.success(res);
         }
         return list.size()>0?Result.success(list.get(0)):Result.fail();
+    }
+
+    //新增
+    @PostMapping("/save")
+    public Result save(@RequestBody User user){
+        return userService.save(user)?Result.success():Result.fail();
     }
 
     //修改
@@ -113,11 +106,11 @@ public class UserController {
         lambdaQueryWrapper.like(User::getName, queryPageParam.getParam().get("name"));
 
         IPage<User> userIPage = userService.page(page, lambdaQueryWrapper);
-        System.out.println("Toal==="+userIPage.getTotal());
+        //System.out.println("Toal==="+userIPage.getTotal());
         return userIPage.getRecords();
     }
 
-    //分页查询返回结果
+    //分页查询(结果封装）
     @PostMapping("/listPageC")
     public Result listPageC(@RequestBody QueryPageParam queryPageParam) {
         Page<User> page = new Page<>(queryPageParam.getPageNum(), queryPageParam.getPageSize());
@@ -126,6 +119,7 @@ public class UserController {
         HashMap<String, Object> param = queryPageParam.getParam();
         String name = param.get("name").toString();
         Integer roleId = (Integer) param.get("roleId");
+        Integer sex=(Integer) param.get("sex");
 
 //        if (param != null && param.get("name") != null) {
 //            name = param.get("name").toString();
@@ -138,9 +132,12 @@ public class UserController {
         if (roleId != null) {
             lambdaQueryWrapper.eq(User::getRoleId, roleId);
         }
+        if (sex != null) {
+            lambdaQueryWrapper.eq(User::getSex, sex);
+        }
 
         IPage<User> userIPage = userService.page(page, lambdaQueryWrapper);
-        System.out.println("Total===" + userIPage.getTotal());
+        //System.out.println("Total===" + userIPage.getTotal());
 
         return Result.success(userIPage.getTotal(), userIPage.getRecords());
     }
