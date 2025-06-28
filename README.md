@@ -61,14 +61,13 @@
   ```
 
 4.使用IDEA运行项目
-  设置JDK版本为JDK1.8，修改application.yml配置文件，该文件在wms/src/main/resources/application.yml。
-  把url后面的wms02改为自己创建的数据库的名字，username：后的root改为mysql用户的名字，password同理。
-  点击上方的WmsApplication和serve，运行前后端项目。
+  设置JDK版本为JDK1.8，修改application.yml配置文件，该文件在wms/src/main/resources/目录下。把url后面的wms02改为自己创建的数据库的名字，username:后的root改为mysql用户的名字，password同理。点击上方的    WmsApplication和serve，运行前后端项目。
   在浏览器中输入
   ```
   localhost:8080
   ```
   访问网站，数据库中默认的用户只有超级管理员，账号为sa，密码为123。
+
 
 ## 致谢
 本项目参考了b站up主编程界小明哥的视频教程BV1Qe411V7TZ。
