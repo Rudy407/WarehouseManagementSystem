@@ -62,6 +62,8 @@
 
 4.使用IDEA运行项目
   设置JDK版本为JDK1.8，修改application.yml配置文件，该文件在wms/src/main/resources/目录下。把url后面的wms02改为自己创建的数据库的名字，username:后的root改为mysql用户的名字，password同理。点击上方的    WmsApplication和serve，运行前后端项目。
+  ![image](https://github.com/user-attachments/assets/91207d8f-12a8-4cbb-af5a-2fca65815895)
+
   在浏览器中输入
   ```
   localhost:8080
