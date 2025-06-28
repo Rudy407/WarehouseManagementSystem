@@ -29,6 +29,13 @@ public class GoodstypeController {
     @Autowired
     private GoodstypeService goodstypeService;
 
+    //
+    @GetMapping("/list")
+    public Result list(){
+        List<Goodstype> list = goodstypeService.list();
+        return Result.success(list);
+    }
+
     //物品类型查询
     @GetMapping("/findByName")
     public Result findByName(@RequestParam String name){

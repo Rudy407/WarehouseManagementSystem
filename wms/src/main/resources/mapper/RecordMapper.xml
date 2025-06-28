@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.wms.mapper.RecordMapper">
+    <select id="listPage" resultType="org.example.wms.entity.RecordRes">
+        SELECT record.*,
+               user.name           AS username,
+               admin.name           AS adminname,
+               goods.name           AS goodsname,
+               goodstype.name       AS goodstypename,
+               storage.name         AS storagename
+        FROM record
+                 LEFT JOIN user ON record.userId = user.id
+                 LEFT JOIN user AS admin ON record.admin_id = admin.id
+                 LEFT JOIN goods ON record.goods = goods.id
+                 LEFT JOIN goodstype ON goods.goodstype = goodstype.id
+                 LEFT JOIN storage ON goods.storage = storage.id
+        <where>
+            <if test="goodsname != null and goodsname != ''">
+                AND goods.name LIKE CONCAT('%', #{goodsname}, '%')
+            </if>
+            <if test="goodstype != null">
+                AND goodstype.id = #{goodstype}
+            </if>
+            <if test="storage != null">
+                AND storage.id = #{storage}
+            </if>
+        </where>
+        ORDER BY record.createtime DESC
+    </select>
+
+    <select id="listPageById" resultType="org.example.wms.entity.RecordRes">
+        SELECT record.*,
+        user.name           AS username,
+        admin.name           AS adminname,
+        goods.name           AS goodsname,
+        goodstype.name       AS goodstypename,
+        storage.name         AS storagename
+        FROM record
+        LEFT JOIN user ON record.userId = user.id
+        LEFT JOIN user AS admin ON record.admin_id = admin.id
+        LEFT JOIN goods ON record.goods = goods.id
+        LEFT JOIN goodstype ON goods.goodstype = goodstype.id
+        LEFT JOIN storage ON goods.storage = storage.id
+        <where>
+            <if test="userid != null">
+                AND record.userId = #{userid}
+            </if>
+            <if test="goodsname != null and goodsname != ''">
+                AND goods.name LIKE CONCAT('%', #{goodsname}, '%')
+            </if>
+            <if test="goodstype != null">
+                AND goodstype.id = #{goodstype}
+            </if>
+            <if test="storage != null">
+                AND storage.id = #{storage}
+            </if>
+        </where>
+        ORDER BY record.createtime DESC
+    </select>
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.example.wms.entity.Record">
+        <id column="id" property="id" />
+        <result column="goods" property="goods" />
+        <result column="userId" property="userid" />
+        <result column="admin_id" property="adminId" />
+        <result column="count" property="count" />
+        <result column="createtime" property="createtime" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, goods, userId, admin_id, count, createtime, remark
+    </sql>
+
+</mapper>

@@ -30,6 +30,13 @@ public class StorageController {
     @Autowired
     private StorageService storageService;
 
+    //
+    @GetMapping("/list")
+    public Result list(){
+        List<Storage> list = storageService.list();
+        return Result.success(list);
+    }
+
     //仓库查询
     @GetMapping("/findByName")
     public Result findByName(@RequestParam String name){

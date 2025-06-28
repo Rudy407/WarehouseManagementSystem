@@ -67,10 +67,18 @@ public class GoodsController {
         // 检查param是否为null
         HashMap<String, Object> param = queryPageParam.getParam();
         String name = param.get("name").toString();
+        Integer goodstype=(Integer) param.get("goodstype");
+        Integer storage=(Integer) param.get("storage");
 
         LambdaQueryWrapper<Goods> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotBlank(name) && !"null".equals(name)) {
             lambdaQueryWrapper.like(Goods::getName, name);
+        }
+        if (goodstype != null) {
+            lambdaQueryWrapper.like(Goods::getGoodstype, goodstype);
+        }
+        if (storage != null) {
+            lambdaQueryWrapper.like(Goods::getStorage, storage);
         }
 
         IPage<Goods> goodsIPage = goodsService.page(page, lambdaQueryWrapper);
