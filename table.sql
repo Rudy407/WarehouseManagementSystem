@@ -77,7 +77,7 @@ CREATE TABLE `record` (
   `userId` int(11) DEFAULT NULL COMMENT '取货人/补货人',
   `admin_id` int(11) DEFAULT NULL COMMENT '操作人id',
   `count` int(11) DEFAULT NULL COMMENT '数量',
-  `createtime` datetime DEFAULT NULL COMMENT '操作时间',
+  `createtime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
   `remark` varchar(1000) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
